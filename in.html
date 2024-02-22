@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ตาราง Responsive</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+</head>
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>หัวข้อ 1</th>
+              <th>หัวข้อ 2</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>ข้อมูล 1</td>
+              <td>ข้อมูล 2</td>
+            </tr>
+            <tr>
+              <td>ข้อมูล 3</td>
+              <td>ข้อมูล 4</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="col-md-6">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>หัวข้อ 3</th>
+              <th>หัวข้อ 4</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>ข้อมูล 5</td>
+              <td>ข้อมูล 6</td>
+            </tr>
+            <tr>
+              <td>ข้อมูล 7</td>
+              <td>ข้อมูล 8</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-8Y76e34YNzd/L85zE1DJuPnqyzC8vMB/bB1n5s/n77n5slS+z334ekHzJ730H+y" crossorigin="anonymous"></script>
+</body>
+</html>
