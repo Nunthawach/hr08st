@@ -1,33 +1,57 @@
 <?php
-    session_start();
-    require_once("config/control.php");
+session_start();
 
-    $url = $_SERVER['REQUEST_URI'];
-?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <title>HOME</title>
-    
-   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+require_once __DIR__ . '/src/LotteryService.php';
+$betTypes = require __DIR__ . '/config/lottery.php';
 
-</head>
-<body>
-    <?php
-        include("path/nav.php");
-        include("path/app.php");
+if (!isset($_SESSION['tickets'])) {
+    $_SESSION['tickets'] = [];
+}
 
-        // ตรวจสอบเลขที่ส่งมา
-        if(isset($_POST['3up'])){
-            include("path/coculator.php");
-            include("path/show.php");
+$errors = [];
+$notices = [];
+$checkResult = null;
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $action = $_POST['action'] ?? '';
+
+    if ($action === 'add_ticket') {
+        $type = $_POST['type'] ?? '';
+        $number = trim($_POST['number'] ?? '');
+        $amount = (float)($_POST['amount'] ?? 0);
+
+        $errors = validateTicketInput($betTypes, $type, $number, $amount);
+
+        if (!$errors) {
+            $_SESSION['tickets'][] = [
+                'id' => uniqid('bet_', true),
+                'type' => $type,
+                'number' => $number,
+                'amount' => $amount,
+                'created_at' => date('Y-m-d H:i:s'),
+            ];
+            $notices[] = 'บันทึกรายการแทงเรียบร้อย';
         }
-    ?>
+    }
 
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
-</body>
-</html>
+    if ($action === 'clear_tickets') {
+        $_SESSION['tickets'] = [];
+        $notices[] = 'ล้างโพยทั้งหมดแล้ว';
+    }
+
+    if ($action === 'check_result') {
+        $result3 = trim($_POST['result_3top'] ?? '');
+        $result2 = trim($_POST['result_2bottom'] ?? '');
+
+        $errors = validateResultInput($result3, $result2);
+
+        if (!$errors) {
+            $checkResult = checkResults($_SESSION['tickets'], $betTypes, $result3, $result2);
+        }
+    }
+}
+
+$tickets = $_SESSION['tickets'];
+$totalBuy = summarizeTickets($tickets);
+
+require __DIR__ . '/templates/home.php';
